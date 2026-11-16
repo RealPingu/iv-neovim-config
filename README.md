@@ -119,7 +119,7 @@ Install a [Nerd Font](https://www.nerdfonts.com/) (e.g., **JetBrains Mono Nerd F
 
 1. **Clone this repository** into your Neovim configuration directory:
    ```bash
-   git clone https://github.com/RealPingu/IVNeovimConfig.git ~/.config/nvim
+   git clone https://github.com/RealPingu/iv-neovim-config.git ~/.config/nvim
    ```
 
 2. **Open Neovim**:

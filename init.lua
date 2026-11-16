@@ -280,10 +280,12 @@ require("oil").setup({
         ["<C-k>"] = false,
         ["<leader>o"] = { "actions.toggle_hidden", desc = "Toggle hidden files" },
         ["<leader>p"] = { "actions.refresh", desc = "Refresh directory" },
+        ["<kMinus>"] = { "actions.parent", desc = "Navigate to the parent path" },
     },
 })
 
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+vim.keymap.set("n", "<kMinus>", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 -- mini pairs
 -- adds auto creation of parentheses and space on enter

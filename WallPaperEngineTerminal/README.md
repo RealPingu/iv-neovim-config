@@ -44,7 +44,7 @@ winget install AutoHotkey.AutoHotkey
 Run the provided helper script from WSL:
 
 ```bash
-cd ~/.config/nvim/wpe-minimize-win
+cd ~/.config/nvim/WallPaperEngineTerminal
 ./install-windows-startup.sh
 ```
 
@@ -67,28 +67,43 @@ The script runs quietly in the background and includes safety checks to ensure a
 
 ---
 
-## 🐧 Linux / X11 Equivalent (Experimental)
+## 🐧 Linux / X11 Equivalent (Debian / Ubuntu / KDE Plasma)
 
-> [!WARNING]
-> **Status: `[UNTESTED / EXPERIMENTAL]`**
-> The Linux script is provided as an experimental counterpart for native Linux / X11 desktop environments (e.g. i3, bspwm, XFCE, GNOME on X11).
+### 1. Recommended Desktop Environment: **KDE Plasma (X11)**
+According to the official documentation of `linux-wallpaperengine` and `wallpaper-engine-kde-plugin`:
+- Desktop environments like GNOME paint their own wallpaper layer over the X root window, blocking live wallpapers.
+- **KDE Plasma** has official native integration via **`wallpaper-engine-kde-plugin`** (or `linux-wallpaperengine-gui`), running directly inside the desktop layer with full playlist and multi-monitor support.
+- Run an **X11 / Xorg** session so window-minimizing and active window hooks work properly.
 
-### Prerequisites:
-```bash
-sudo apt install -y xdotool wmctrl x11-utils
+---
+
+### 2. Ghostty Transparency Configuration
+
+In `~/.config/ghostty/config`:
+```ini
+# Emulate Windows Terminal transparency
+background-opacity = 0.80
+background-blur-radius = 20
+window-decoration = false
 ```
 
-### Usage:
+---
+
+### 3. Linux Daemon Prerequisites & Usage
+
 ```bash
-cd ~/.config/nvim/wpe-minimize-win
+sudo apt update
+sudo apt install -y xdotool wmctrl x11-utils x11-xserver-utils
+```
+
+Run in background or add to your desktop autostart:
+```bash
+cd ~/.config/nvim/WallPaperEngineTerminal
 ./terminal-wallpaper-minimize.sh &
 ```
 
-**How it works:**
-- Monitors `_NET_ACTIVE_WINDOW` events via `xprop`.
-- Checks if the focused window matches common terminal classes (`alacritty`, `kitty`, `wezterm`, `gnome-terminal`, `foot`, `st`).
-- Minimizes all other normal client windows on the current active workspace.
-
-**TODO**
-- Test script with native Linux distros.
-- Test different Linux terminals that allows transparency.
+**Features parity with `TerminalWallpaper.ahk`:**
+- **Ghostty & Modern Terminals**: Detects `ghostty`, `com.mitchellh.ghostty`, `alacritty`, `kitty`, `wezterm`, etc.
+- **Multi-Monitor Awareness**: Calculates monitor boundaries via `xrandr` and `xwininfo`. Only windows on the **exact same monitor** as Ghostty are minimized; secondary monitors remain untouched.
+- **Alt-Tab Safety**: Debounces 150ms before triggering to never interfere with rapid window switching.
+- **System Filtering**: Ignores docks, KDE Plasma panels, taskbars, and notifications (`_NET_WM_WINDOW_TYPE_DOCK`, `plasmashell`).
