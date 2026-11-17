@@ -224,7 +224,7 @@ require('blink.cmp').setup({
             snippets = {
                 opts = {
                     search_paths = {
-                        vim.fn.stdpath('config') .. '/Latex-WSL/snippets',
+                        vim.fn.stdpath('config') .. '/snippets',
                     },
                 },
             },
@@ -249,12 +249,15 @@ vim.keymap.set('n', '<leader>gf', function()
         dir = vim.fn.expand('%:p:h')
     end
 
-    if dir and dir ~= '' then
+    local git_root = dir and vim.fs.root(dir, '.git')
+    if git_root then
+        require('lazygit').lazygit(git_root)
+    elseif dir and dir ~= '' then
         require('lazygit').lazygit(dir)
     else
         require('lazygit').lazygit()
     end
-end, { desc = 'Lazygit (current file or oil directory)' })
+end, { desc = 'Lazygit (current file or oil directory repository)' })
 
 -- Codediff
 require("codediff").setup({})
